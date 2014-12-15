@@ -6,7 +6,6 @@
 
 
 from sys import stderr, stdin, stdout
-from random import randint
 
 from utils import Random
 from map import Map
