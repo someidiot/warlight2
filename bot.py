@@ -171,7 +171,7 @@ class Bot(object):
         
         Currently selects a random region from the list.
         '''
-        i = randint(0,len(options)-1)
+        i = Random.randrange(0,len(options)-1)
         
         return options[i]
 
