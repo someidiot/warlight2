@@ -96,7 +96,11 @@ class Bot(object):
         '''
         Method to update game settings at the start of a new game.
         '''
-        key, value = options
+        key = options[0]
+        if len(options) > 2:
+            value = options[1:]
+        else:
+            value = options[1]
         self.settings[key] = value
 
 
@@ -157,12 +161,23 @@ class Bot(object):
         '''
         Method to update our map every round.
         '''
+
+        # Make a copy of owned regions
+        orig_owned_regions = self.map.get_owned_regions(self.settings['your_bot'])[:]
+
         for i in range(0, len(options), 3):
             
             region = self.map.get_region_by_id(options[i])
+            if region.owner == self.settings['your_bot']:
+                orig_owned_regions.remove(region)
             region.owner = options[i + 1]
             region.troop_count = int(options[i + 2])
-            
+
+        # if we own a region that was not in the update, it must have been captured and is now hidden by fog of war
+        for region in orig_owned_regions:
+            #print region.id + ' was captured'
+            region.owner = self.settings['opponent_bot']
+                        
 
     def pick_starting_region(self, options):
         '''
